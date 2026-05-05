@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="images/hero.png" alt="Doppler Shift Visualiser" width="900">
+</p>
+
 # Doppler Shift Visualiser
 
 A simple Python and web-based tool for visualising Doppler shift in astronomical spectra.
