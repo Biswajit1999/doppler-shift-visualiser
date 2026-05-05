@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doppler Shift Visualiser</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Doppler Shift Visualiser</h1>
+      <p>
+        A simple astronomy tool showing how spectral lines shift when an object moves
+        towards or away from an observer.
+      </p>
+    </section>
+
+    <section class="card">
+      <label for="velocity">Radial velocity: <span id="velocityValue">50</span> km/s</label>
+      <input type="range" id="velocity" min="-300" max="300" value="50" step="1" />
+
+      <p id="resultText"></p>
+
+      <canvas id="spectrumCanvas" width="900" height="360"></canvas>
+    </section>
+
+    <section class="explanation">
+      <h2>Physics idea</h2>
+      <p>
+        If a star moves away from us, its spectral lines shift towards longer wavelengths
+        and appear redshifted. If it moves towards us, the lines shift towards shorter
+        wavelengths and appear blueshifted.
+      </p>
+
+      <p class="equation">
+        Δλ / λ = v / c
+      </p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
