@@ -32,6 +32,10 @@ Doppler shift is central to observational astronomy. It is used to study:
 - galaxy motion
 - spectroscopy
 
+## Live Demo
+
+[Try the interactive tool](https://biswajit1999.github.io/doppler-shift-visualiser/web/)
+
 ## Python version
 
 Run:
