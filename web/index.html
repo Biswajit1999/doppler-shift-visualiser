@@ -7,36 +7,58 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <main class="container">
+  <main class="page">
     <section class="hero">
       <h1>Doppler Shift Visualiser</h1>
-      <p>
-        A simple astronomy tool showing how spectral lines shift when an object moves
-        towards or away from an observer.
-      </p>
+      <p>Explore redshift, blueshift, wavelength shift, and radial velocity using an interactive spectrum.</p>
     </section>
 
-    <section class="card">
-      <label for="velocity">Radial velocity: <span id="velocityValue">50</span> km/s</label>
-      <input type="range" id="velocity" min="-300" max="300" value="50" step="1" />
+    <section class="dashboard">
+      <div class="controls">
+        <h2>Controls</h2>
 
-      <p id="resultText"></p>
+        <label>Radial velocity: <span id="velocityValue">0</span> km/s</label>
+        <input type="range" id="velocity" min="-300" max="300" value="0" step="1" />
 
-      <canvas id="spectrumCanvas" width="900" height="360"></canvas>
+        <div class="buttons">
+          <button data-v="-150">Approaching star</button>
+          <button data-v="0">No motion</button>
+          <button data-v="150">Receding star</button>
+        </div>
+
+        <div class="stats">
+          <div>
+            <span>Effect</span>
+            <strong id="effect">No shift</strong>
+          </div>
+          <div>
+            <span>Original line</span>
+            <strong>589.0 nm</strong>
+          </div>
+          <div>
+            <span>Shifted line</span>
+            <strong id="shiftedLine">589.0 nm</strong>
+          </div>
+          <div>
+            <span>Δλ</span>
+            <strong id="deltaLambda">0.000 nm</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="visual">
+        <canvas id="canvas" width="1000" height="520"></canvas>
+      </div>
     </section>
 
     <section class="explanation">
       <h2>Physics idea</h2>
       <p>
-        If a star moves away from us, its spectral lines shift towards longer wavelengths
-        and appear redshifted. If it moves towards us, the lines shift towards shorter
-        wavelengths and appear blueshifted.
+        Positive radial velocity means the object is moving away, so its spectral line shifts to longer wavelength
+        redshift. Negative radial velocity means the object is moving towards us, so the line shifts to shorter
+        wavelength blueshift.
       </p>
-
-      <p class="equation">
-        Δλ / λ = v / c
-      </p>
+      <p class="equation">Δλ / λ = v / c</p>
     </section>
   </main>
 
