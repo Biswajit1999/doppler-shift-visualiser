@@ -1,3 +1,5 @@
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 <p align="center">
   <img src="images/hero.png" alt="Doppler Shift Visualiser" width="900">
 </p>
@@ -39,6 +41,18 @@ Doppler shift is central to observational astronomy. It is used to study:
 ## Live Demo
 
 [Try the interactive tool](https://biswajit1999.github.io/doppler-shift-visualiser/web/)
+
+## Licence and attribution
+
+Code in this repository is released under the MIT Licence.
+
+Images, diagrams, written explanations, and educational content are © 2026 Biswajit Jana unless otherwise stated.
+
+Please credit this repository if you reuse or adapt any visual or explanatory material.
+
+Suggested attribution:
+
+“Doppler Shift Visualiser by Biswajit Jana — https://github.com/Biswajit1999/doppler-shift-visualiser”
 
 ## Python version
 
