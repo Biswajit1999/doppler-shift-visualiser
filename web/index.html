@@ -3,64 +3,221 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Doppler Shift Visualiser</title>
+  <title>Doppler Shift Visualiser — Astrophysics Edition</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <span class="header-tag">Astrophysics Interactive</span>
+        <h1 class="site-title">Doppler Shift <em>Visualiser</em></h1>
+        <p class="site-sub">
+          Explore how stellar radial velocity shifts spectral lines — the physical basis of
+          precision radial-velocity spectrography for exoplanet detection.
+        </p>
+      </div>
+      <div class="header-badge">
+        <div class="badge-inner">
+          <span class="badge-eq">Δλ / λ = v / c</span>
+          <span class="badge-label">Non-relativistic Doppler</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
   <main class="page">
-    <section class="hero">
-      <h1>Doppler Shift Visualiser</h1>
-      <p>Explore redshift, blueshift, wavelength shift, and radial velocity using an interactive spectrum.</p>
-    </section>
 
-    <section class="dashboard">
-      <div class="controls">
-        <h2>Controls</h2>
+    <!-- TOP ROW: WAVE ANIMATION + STATS -->
+    <div class="top-row">
 
-        <label>Radial velocity: <span id="velocityValue">0</span> km/s</label>
-        <input type="range" id="velocity" min="-300" max="300" value="0" step="1" />
+      <!-- Wave panel -->
+      <div class="panel wave-panel" id="waveContainer">
+        <div class="panel-label">Wavefront geometry</div>
+        <canvas id="waveCanvas" width="480" height="300"></canvas>
+        <div class="wave-legend">
+          <span class="legend-dot blue"></span><span>Blueshift — approaching</span>
+          <span class="legend-dot red"></span><span>Redshift — receding</span>
+        </div>
+      </div>
 
-        <div class="buttons">
-          <button data-v="-150">Approaching star</button>
-          <button data-v="0">No motion</button>
-          <button data-v="150">Receding star</button>
+      <!-- Stats grid -->
+      <div class="stats-col">
+        <div class="stat-card accent">
+          <span class="stat-label">Radial velocity</span>
+          <span class="stat-val" id="statVelocity">0</span>
+          <span class="stat-unit">km s⁻¹</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Rest wavelength λ₀</span>
+          <span class="stat-val">589.592</span>
+          <span class="stat-unit">nm (Na D₁)</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Observed λ</span>
+          <span class="stat-val" id="statLambda">589.592</span>
+          <span class="stat-unit">nm</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Wavelength shift Δλ</span>
+          <span class="stat-val" id="statDelta">0.000</span>
+          <span class="stat-unit">nm</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Fractional shift Δλ/λ</span>
+          <span class="stat-val mono" id="statFrac">0.000 × 10⁰</span>
+          <span class="stat-unit"></span>
+        </div>
+        <div class="stat-card effect-card">
+          <span class="stat-label">Effect</span>
+          <span class="stat-val effect-val" id="statEffect">No shift</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPECTRUM ROW -->
+    <div class="panel spectrum-panel">
+      <div class="panel-label">Absorption-line spectrum — sodium D lines (Na I)</div>
+      <canvas id="specCanvas" width="1400" height="260"></canvas>
+      <div class="spectrum-footer">
+        <span class="mono dim">380 nm</span>
+        <span class="mono dim">450 nm</span>
+        <span class="mono dim">500 nm</span>
+        <span class="mono dim">550 nm</span>
+        <span class="mono dim">600 nm</span>
+        <span class="mono dim">650 nm</span>
+        <span class="mono dim">700 nm</span>
+        <span class="mono dim">750 nm</span>
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls-row">
+
+      <!-- Velocity slider -->
+      <div class="panel control-panel">
+        <div class="panel-label">Radial velocity control</div>
+
+        <div class="slider-block">
+          <div class="slider-header">
+            <span class="mono dim">−300 km s⁻¹</span>
+            <span class="slider-readout" id="sliderReadout">v = 0 km s⁻¹</span>
+            <span class="mono dim">+300 km s⁻¹</span>
+          </div>
+          <input type="range" id="velocity" min="-300" max="300" value="0" step="1" />
+          <div class="slider-track-labels">
+            <span class="blue-label">← Approaching (blueshift)</span>
+            <span class="red-label">Receding (redshift) →</span>
+          </div>
         </div>
 
-        <div class="stats">
-          <div>
-            <span>Effect</span>
-            <strong id="effect">No shift</strong>
+        <div class="preset-grid">
+          <button class="preset-btn" data-v="-270" data-label="Hot O-star, +winds">O-star approach</button>
+          <button class="preset-btn" data-v="-30" data-label="Exoplanet host (edge)">Exoplanet host −</button>
+          <button class="preset-btn active" data-v="0" data-label="No relative motion">Rest frame</button>
+          <button class="preset-btn" data-v="30" data-label="Exoplanet host (edge)">Exoplanet host +</button>
+          <button class="preset-btn" data-v="150" data-label="Typical galaxy recession">Galaxy recession</button>
+          <button class="preset-btn" data-v="270" data-label="Fast receding star">Fast recession</button>
+        </div>
+      </div>
+
+      <!-- Equation panel -->
+      <div class="panel eq-panel">
+        <div class="panel-label">Key equations</div>
+
+        <div class="eq-block">
+          <div class="eq-tag">Non-relativistic Doppler</div>
+          <div class="eq-math">Δλ / λ₀ = v<sub>r</sub> / c</div>
+          <div class="eq-note">
+            Valid for v<sub>r</sub> ≪ c. At 300 km s⁻¹,
+            v/c ≈ 10⁻³, so the relativistic correction is &lt; 0.1%.
           </div>
-          <div>
-            <span>Original line</span>
-            <strong>589.0 nm</strong>
+        </div>
+
+        <div class="eq-block">
+          <div class="eq-tag">Relativistic (full)</div>
+          <div class="eq-math">λ<sub>obs</sub> = λ₀ √( (1 + β) / (1 − β) )</div>
+          <div class="eq-note">
+            β = v<sub>r</sub>/c. Used for cosmological redshifts
+            and high-speed stellar jets.
           </div>
-          <div>
-            <span>Shifted line</span>
-            <strong id="shiftedLine">589.0 nm</strong>
+        </div>
+
+        <div class="eq-block">
+          <div class="eq-tag">RV precision context</div>
+          <div class="eq-math">σ<sub>RV</sub> = (c / R) · (S/N)⁻¹ · β⁻½</div>
+          <div class="eq-note">
+            R = resolving power, β = spectral filling factor.
+            HARPS achieves ~1 m s⁻¹; ESPRESSO targets ~10 cm s⁻¹.
           </div>
-          <div>
-            <span>Δλ</span>
-            <strong id="deltaLambda">0.000 nm</strong>
+        </div>
+
+        <div class="eq-live">
+          <div class="eq-live-label">Live calculation</div>
+          <div class="eq-live-math" id="liveMath">
+            Δλ = 589.592 × (0 / 299792.458) = <strong>0.000 nm</strong>
           </div>
         </div>
       </div>
 
-      <div class="visual">
-        <canvas id="canvas" width="1000" height="520"></canvas>
-      </div>
-    </section>
+    </div>
 
-    <section class="explanation">
-      <h2>Physics idea</h2>
-      <p>
-        Positive radial velocity means the object is moving away, so its spectral line shifts to longer wavelength
-        redshift. Negative radial velocity means the object is moving towards us, so the line shifts to shorter
-        wavelength blueshift.
-      </p>
-      <p class="equation">Δλ / λ = v / c</p>
-    </section>
+    <!-- CONTEXT / EXPLANATION -->
+    <div class="panel context-panel">
+      <div class="context-grid">
+        <div class="context-block">
+          <h3>Physical mechanism</h3>
+          <p>
+            A stellar atmosphere radiates photons at precise rest wavelengths governed by atomic energy
+            levels. When the star moves radially with velocity v<sub>r</sub>, the wavelengths of received
+            photons are shifted by Δλ = λ₀ v<sub>r</sub>/c. This is the first-order Doppler effect. A
+            receding source (positive v<sub>r</sub>) stretches photon wavelengths — <em>redshift</em>.
+            An approaching source compresses them — <em>blueshift</em>.
+          </p>
+        </div>
+        <div class="context-block">
+          <h3>Spectral lines shown</h3>
+          <p>
+            The visualiser uses the <strong>sodium D lines</strong> (Na&nbsp;I doublet at 588.995 and
+            589.592&nbsp;nm) as the primary indicator, alongside representative Fe&nbsp;I, Mg&nbsp;I,
+            Hα, and Ca&nbsp;II H&amp;K lines. In a real spectrograph, hundreds of such lines are
+            cross-correlated simultaneously to build a high-precision velocity measurement.
+          </p>
+        </div>
+        <div class="context-block">
+          <h3>Astrophysical applications</h3>
+          <p>
+            Radial-velocity spectroscopy is one of two main methods for detecting exoplanets. A planet
+            gravitationally tugs its host star; the stellar reflex velocity for an Earth-mass planet in
+            a 1-AU orbit is only ~9 cm s⁻¹. Detecting that requires
+            σ<sub>RV</sub> &lt; 10 cm s⁻¹, motivating ultra-stabilised spectrographs such as HARPS,
+            ESPRESSO, and EXOhSPEC.
+          </p>
+        </div>
+        <div class="context-block">
+          <h3>Na D lines — why they matter</h3>
+          <p>
+            Sodium D lines are strong, narrow, and appear in virtually every late-type stellar spectrum.
+            Their sharpness (small intrinsic width) makes centroid measurement precise. In the solar
+            spectrum they are among the most prominent absorption features, detected in stellar
+            atmospheres, interstellar medium, and exoplanet atmospheres via transmission spectroscopy.
+          </p>
+        </div>
+      </div>
+    </div>
+
   </main>
+
+  <footer class="site-footer">
+    <span class="mono dim">Doppler Shift Visualiser · Astrophysics Interactive · Biswajit Jana · 2026</span>
+    <span class="mono dim">Na D₁ λ₀ = 589.592 nm · c = 299,792.458 km s⁻¹</span>
+  </footer>
 
   <script src="script.js"></script>
 </body>
