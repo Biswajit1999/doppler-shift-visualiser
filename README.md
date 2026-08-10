@@ -61,3 +61,7 @@ Run:
 ```bash
 pip install -r requirements.txt
 python main.py
+
+## Research Quality Upgrade
+
+See [RESEARCH_QUALITY.md](RESEARCH_QUALITY.md) for the validation layer, reference anchors, equations and research boundaries added to this repository.

@@ -1,0 +1,28 @@
+{
+  "title": "Doppler Shift Visualiser",
+  "description": "Browser Doppler-shift laboratory for radial velocity, relativistic wavelength shifts and astronomical redshift interpretation.",
+  "equations": [
+    "Relativistic Doppler factor sqrt((1+beta)/(1-beta))",
+    "Low-velocity approximation Delta lambda / lambda = v/c"
+  ],
+  "references": [
+    "Rybicki, G.B. and Lightman, A.P., 1979. Radiative Processes in Astrophysics. Wiley."
+  ],
+  "anchors": [
+    {
+      "x": 656.28,
+      "y": 656.5,
+      "label": "H-alpha receding example"
+    },
+    {
+      "x": 500.7,
+      "y": 500.62,
+      "label": "oxygen blueshift example"
+    },
+    {
+      "x": 121.57,
+      "y": 364.71,
+      "label": "Lyman-alpha z=2 example"
+    }
+  ]
+}
