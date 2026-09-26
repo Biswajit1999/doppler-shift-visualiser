@@ -1,28 +1,34 @@
 {
   "title": "Doppler Shift Visualiser",
-  "description": "Browser Doppler-shift laboratory for radial velocity, relativistic wavelength shifts and astronomical redshift interpretation.",
+  "description": "Browser laboratory for first-order and longitudinal special-relativistic wavelength shifts.",
   "equations": [
-    "Relativistic Doppler factor sqrt((1+beta)/(1-beta))",
-    "Low-velocity approximation Delta lambda / lambda = v/c"
+    "Longitudinal special-relativistic Doppler factor sqrt((1+beta)/(1-beta))",
+    "Low-velocity approximation z = Delta lambda / lambda approximately v/c",
+    "Photon-noise floor sigma_v = c/(Q sqrt(N_e))"
   ],
   "references": [
-    "Rybicki, G.B. and Lightman, A.P., 1979. Radiative Processes in Astrophysics. Wiley."
+    "Lindegren, L. and Dravins, D., 2003. The fundamental definition of radial velocity. A&A 401, 1185.",
+    "Bouchy, F., Pepe, F. and Queloz, D., 2001. Fundamental photon noise limit to radial velocity measurements. A&A 374, 733.",
+    "NIST Atomic Spectra Database, Na I air wavelengths, accessed 2026-09-26."
   ],
   "anchors": [
     {
-      "x": 656.28,
-      "y": 656.5,
-      "label": "H-alpha receding example"
+      "rest_wavelength_nm": 589.592,
+      "velocity_kms": -300,
+      "observed_wavelength_nm": 589.002294743072,
+      "label": "Na D1 approaching benchmark"
     },
     {
-      "x": 500.7,
-      "y": 500.62,
-      "label": "oxygen blueshift example"
+      "rest_wavelength_nm": 589.592,
+      "velocity_kms": 30,
+      "observed_wavelength_nm": 589.651002968943,
+      "label": "Na D1 receding low-velocity benchmark"
     },
     {
-      "x": 121.57,
-      "y": 364.71,
-      "label": "Lyman-alpha z=2 example"
+      "rest_wavelength_nm": 589.592,
+      "velocity_kms": 300,
+      "observed_wavelength_nm": 590.182295665986,
+      "label": "Na D1 receding upper-slider benchmark"
     }
   ]
 }

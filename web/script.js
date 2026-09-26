@@ -1,9 +1,15 @@
 "use strict";
 
+import {
+  C_KMS,
+  classicalObservedWavelength,
+  relativisticObservedWavelength,
+  spectroscopicRedshift,
+} from "./physics.js";
+
 /* ──────────────────────────────────────────────
    PHYSICAL CONSTANTS & LINE DATA
 ────────────────────────────────────────────── */
-const C = 299792.458;          // km s⁻¹
 const LAMBDA0 = 589.592;       // nm  —  Na I D₁ rest wavelength (NIST)
 
 // Spectral line catalogue used in the display
@@ -20,7 +26,7 @@ const LINES = [
   { lambda: 589.592, element: "Na I D₁",  label: "Na D₁", strength: 0.95, primary: true },
   { lambda: 630.031, element: "O I",      label: "O I",   strength: 0.30 },
   { lambda: 656.281, element: "Hα",       label: "Hα",    strength: 0.88 },
-  { lambda: 686.719, element: "O₂ A",     label: "O₂ A",  strength: 0.45 },
+  { lambda: 686.719, element: "O₂ B (telluric)", label: "O₂ B", strength: 0.45, frame: "telluric" },
   { lambda: 718.536, element: "Ca I",     label: "Ca I",  strength: 0.35 },
 ];
 
@@ -87,8 +93,7 @@ function drawSpectrum(velocity) {
   sctx.fillStyle = "#04090f";
   sctx.fillRect(0, 0, W, H);
 
-  const doppler = velocity / C;
-  const lambdaObs = LAMBDA0 * (1 + doppler);
+  const lambdaObs = relativisticObservedWavelength(LAMBDA0, velocity);
 
   /* ── Draw background spectrum gradient ── */
   function drawSpecBar(top, height) {
@@ -143,9 +148,11 @@ function drawSpectrum(velocity) {
   drawSpecBar(shiftedBarTop, shiftedBarH);
 
   /* ── Draw absorption lines on both bars ── */
-  function drawAbsorptionLines(barTopY, barHeight, shift) {
+  function drawAbsorptionLines(barTopY, barHeight, lineVelocity) {
     for (const line of LINES) {
-      const shifted = line.lambda * (1 + shift);
+      const shifted = line.frame === "telluric"
+        ? line.lambda
+        : relativisticObservedWavelength(line.lambda, lineVelocity);
       if (shifted < SPEC_MIN || shifted > SPEC_MAX) continue;
       const x = lambdaToX(shifted, W, PAD_L, PAD_R);
       const alpha = 0.15 + line.strength * 0.75;
@@ -163,12 +170,12 @@ function drawSpectrum(velocity) {
     }
   }
 
-  drawAbsorptionLines(barTop,        barH,        0);       // rest
-  drawAbsorptionLines(shiftedBarTop, shiftedBarH, doppler); // shifted
+  drawAbsorptionLines(barTop,        barH,        0);        // rest
+  drawAbsorptionLines(shiftedBarTop, shiftedBarH, velocity); // shifted source; telluric fixed
 
   /* ── Na D indicator lines (prominent) ── */
-  function drawNaDIndicator(topY, height, lambda, color, shift) {
-    const sx = lambdaToX(lambda * (1 + shift), W, PAD_L, PAD_R);
+  function drawNaDIndicator(topY, height, lambda, color, lineVelocity) {
+    const sx = lambdaToX(relativisticObservedWavelength(lambda, lineVelocity), W, PAD_L, PAD_R);
     if (sx < PAD_L || sx > W - PAD_R) return;
 
     // Glow
@@ -193,7 +200,8 @@ function drawSpectrum(velocity) {
     // Tick + label
     sctx.font = "500 18px 'JetBrains Mono', monospace";
     sctx.fillStyle = color;
-    sctx.fillText((lambda * (1 + shift)).toFixed(2) + " nm", sx - 36, topY + height + 32);
+    const observed = relativisticObservedWavelength(lambda, lineVelocity);
+    sctx.fillText(observed.toFixed(2) + " nm", sx - 36, topY + height + 32);
   }
 
   const restColor    = "rgba(230,240,255,1)";
@@ -204,7 +212,7 @@ function drawSpectrum(velocity) {
     : "rgba(230,240,255,0.6)";
 
   drawNaDIndicator(barTop,        barH,        LAMBDA0, restColor,    0);
-  drawNaDIndicator(shiftedBarTop, shiftedBarH, LAMBDA0, shiftedColor, doppler);
+  drawNaDIndicator(shiftedBarTop, shiftedBarH, LAMBDA0, shiftedColor, velocity);
 
   /* ── Connecting dashed line between bars ── */
   if (Math.abs(velocity) > 0) {
@@ -414,10 +422,11 @@ function superscript(n) {
 }
 
 function updateStats(v) {
-  const doppler    = v / C;
-  const lambdaObs  = LAMBDA0 * (1 + doppler);
+  const lambdaObs  = relativisticObservedWavelength(LAMBDA0, v);
+  const classicalLambda = classicalObservedWavelength(LAMBDA0, v);
   const delta      = lambdaObs - LAMBDA0;
-  const frac       = delta / LAMBDA0;
+  const frac       = spectroscopicRedshift(LAMBDA0, v);
+  const correctionPm = (lambdaObs - classicalLambda) * 1000;
 
   // Slider readout
   const sign = v > 0 ? "+" : "";
@@ -440,10 +449,10 @@ function updateStats(v) {
   // Live math
   const deltaStr = (delta >= 0 ? "+" : "") + delta.toFixed(5);
   liveMath.innerHTML = `
-    Δλ = λ₀ · (v/c)<br>
-    Δλ = ${LAMBDA0} × (${sign}${v} / ${C})<br>
-    Δλ = ${LAMBDA0} × ${doppler.toExponential(4)}<br>
-    Δλ = <strong>${deltaStr} nm</strong>
+    λ<sub>obs</sub> = λ₀ √((1 + β)/(1 − β))<br>
+    β = ${sign}${v} / ${C_KMS} = ${(v / C_KMS).toExponential(4)}<br>
+    z = ${frac.toExponential(6)} · Δλ = <strong>${deltaStr} nm</strong><br>
+    exact − first order = ${correctionPm.toExponential(3)} pm
   `;
 }
 

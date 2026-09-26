@@ -1,67 +1,78 @@
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-
-<p align="center">
-  <img src="images/hero.png" alt="Doppler Shift Visualiser" width="900">
-</p>
-
 # Doppler Shift Visualiser
 
-A simple Python and web-based tool for visualising Doppler shift in astronomical spectra.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/Biswajit1999/doppler-shift-visualiser/actions/workflows/ci.yml/badge.svg)](https://github.com/Biswajit1999/doppler-shift-visualiser/actions/workflows/ci.yml)
 
-## What this project does
+An interactive spectroscopy laboratory for comparing the first-order and longitudinal special-relativistic Doppler relations, following source-frame stellar lines, and separating them from an observer-frame telluric feature.
 
-This project shows how spectral lines move when an astronomical object has radial motion relative to the observer.
+## Live laboratory
 
-- Positive velocity means the object is moving away: redshift
-- Negative velocity means the object is moving towards us: blueshift
+[Open the interactive visualiser](https://biswajit1999.github.io/doppler-shift-visualiser/web/)
 
-## Physics background
+The browser view provides:
 
-For small velocities compared with the speed of light, the Doppler shift can be approximated as:
+- exact `1 + z = sqrt((1 + beta)/(1 - beta))` wavelength shifts over ±300 km/s;
+- the first-order `z ≈ v/c` approximation and its residual from the exact result;
+- a labelled Na I D doublet plus representative stellar features;
+- an O₂ B telluric feature that remains fixed in the observer frame;
+- a deliberately exaggerated wavefront animation, clearly separate from the numerical calculation; and
+- a photon-noise precision relation stated in the Bouchy–Pepe–Queloz quality-factor form.
 
-Δλ / λ = v / c
+This is an educational forward model, not a wavelength-calibration pipeline, synthetic spectrograph, cross-correlation implementation, or exoplanet detection claim.
 
-where:
+## Numerical model
 
-- Δλ is the change in wavelength
-- λ is the original wavelength
-- v is radial velocity
-- c is the speed of light
+For one-dimensional relative motion in flat spacetime,
 
-## Why this matters
+```text
+beta = v / c
+lambda_obs / lambda_0 = 1 + z = sqrt((1 + beta) / (1 - beta))
+```
 
-Doppler shift is central to observational astronomy. It is used to study:
+For `|v| << c`, `z ≈ v/c` and `lambda_obs ≈ lambda_0(1 + v/c)`. The interface computes the exact relation and reports the first-order discrepancy. It does not use this special-relativistic relation to explain cosmological redshift.
 
-- radial velocity of stars
-- exoplanet detection
-- binary stars
-- galaxy motion
-- spectroscopy
+The photon-limited RV uncertainty context is
 
-## Live Demo
+```text
+sigma_v = c / (Q sqrt(N_e))
+```
 
-[Try the interactive tool](https://biswajit1999.github.io/doppler-shift-visualiser/web/)
+where `Q` summarizes the Doppler information content of the sampled spectrum and `N_e` is the detected photoelectron count. This is a lower bound conditional on the spectrum and detector sampling; stellar activity, calibration, tellurics, and instrumental systematics are additional.
 
-## Licence and attribution
+## Run locally
 
-Code in this repository is released under the MIT Licence.
-
-Images, diagrams, written explanations, and educational content are © 2026 Biswajit Jana unless otherwise stated.
-
-Please credit this repository if you reuse or adapt any visual or explanatory material.
-
-Suggested attribution:
-
-“Doppler Shift Visualiser by Biswajit Jana — https://github.com/Biswajit1999/doppler-shift-visualiser”
-
-## Python version
-
-Run:
+Serve the repository so browser modules load correctly:
 
 ```bash
-pip install -r requirements.txt
+python -m http.server 8000
+```
+
+Then open `http://localhost:8000/web/`.
+
+The separate Python demonstration can be run with:
+
+```bash
+python -m pip install -r requirements.txt
 python main.py
+```
 
-## Research Quality Upgrade
+## Verification
 
-See [RESEARCH_QUALITY.md](RESEARCH_QUALITY.md) for the validation layer, reference anchors, equations and research boundaries added to this repository.
+```bash
+npm test
+npm run validate:research
+python -m unittest discover -s tests -p "test_*.py"
+```
+
+The JavaScript tests cover zero shift, low-velocity agreement, relativistic reciprocal symmetry, sign conventions, invalid inputs, and the photon-noise quality-factor relation. The Python tests independently exercise the numerical shift functions and output-path handling.
+
+## Evidence and boundaries
+
+- [Methods](docs/METHODS.md)
+- [Validation](docs/VALIDATION.md)
+- [Data and references](docs/DATA_SOURCES.md)
+- [Limitations](docs/LIMITATIONS.md)
+
+## Citation
+
+See `CITATION.cff`. Code is MIT licensed. The project is independent and is not affiliated with NIST, ESO, NASA, ESA, or any instrument consortium.

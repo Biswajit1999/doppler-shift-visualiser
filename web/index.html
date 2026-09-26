@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Doppler Shift Visualiser — Astrophysics Edition</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20260926" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -24,8 +24,8 @@
       </div>
       <div class="header-badge">
         <div class="badge-inner">
-          <span class="badge-eq">Δλ / λ = v / c</span>
-          <span class="badge-label">Non-relativistic Doppler</span>
+          <span class="badge-eq">1 + z = √((1 + β)/(1 − β))</span>
+          <span class="badge-label">Longitudinal special-relativistic Doppler</span>
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@
           <span class="stat-unit">nm</span>
         </div>
         <div class="stat-card">
-          <span class="stat-label">Fractional shift Δλ/λ</span>
+          <span class="stat-label">Spectroscopic redshift z</span>
           <span class="stat-val mono" id="statFrac">0.000 × 10⁰</span>
           <span class="stat-unit"></span>
         </div>
@@ -135,8 +135,8 @@
           <div class="eq-tag">Non-relativistic Doppler</div>
           <div class="eq-math">Δλ / λ₀ = v<sub>r</sub> / c</div>
           <div class="eq-note">
-            Valid for v<sub>r</sub> ≪ c. At 300 km s⁻¹,
-            v/c ≈ 10⁻³, so the relativistic correction is &lt; 0.1%.
+            First-order approximation for |v<sub>r</sub>| ≪ c. At 300 km s⁻¹,
+            the exact correction is about 0.05% of the first-order wavelength shift.
           </div>
         </div>
 
@@ -144,17 +144,18 @@
           <div class="eq-tag">Relativistic (full)</div>
           <div class="eq-math">λ<sub>obs</sub> = λ₀ √( (1 + β) / (1 − β) )</div>
           <div class="eq-note">
-            β = v<sub>r</sub>/c. Used for cosmological redshifts
-            and high-speed stellar jets.
+            β = v<sub>r</sub>/c for one-dimensional relative motion in flat spacetime.
+            Cosmological redshift requires an expanding-universe model and is not this formula.
           </div>
         </div>
 
         <div class="eq-block">
           <div class="eq-tag">RV precision context</div>
-          <div class="eq-math">σ<sub>RV</sub> = (c / R) · (S/N)⁻¹ · β⁻½</div>
+          <div class="eq-math">σ<sub>v</sub> = c / (Q √N<sub>e⁻</sub>)</div>
           <div class="eq-note">
-            R = resolving power, β = spectral filling factor.
-            HARPS achieves ~1 m s⁻¹; ESPRESSO targets ~10 cm s⁻¹.
+            Photon-noise floor from Bouchy, Pepe &amp; Queloz (2001): Q captures
+            the Doppler information in the sampled spectrum and N<sub>e⁻</sub> is the
+            detected photoelectron count. Stellar and instrumental systematics are additional.
           </div>
         </div>
 
@@ -186,27 +187,28 @@
           <p>
             The visualiser uses the <strong>sodium D lines</strong> (Na&nbsp;I doublet at 588.995 and
             589.592&nbsp;nm) as the primary indicator, alongside representative Fe&nbsp;I, Mg&nbsp;I,
-            Hα, and Ca&nbsp;II H&amp;K lines. In a real spectrograph, hundreds of such lines are
-            cross-correlated simultaneously to build a high-precision velocity measurement.
+            Hα, and Ca&nbsp;II H&amp;K lines. The O₂ B feature is explicitly telluric and remains
+            fixed in the observer frame; stellar features shift. Real pipelines combine many
+            pixels or lines against a template rather than reading one painted stripe.
           </p>
         </div>
         <div class="context-block">
           <h3>Astrophysical applications</h3>
           <p>
             Radial-velocity spectroscopy is one of two main methods for detecting exoplanets. A planet
-            gravitationally tugs its host star; the stellar reflex velocity for an Earth-mass planet in
-            a 1-AU orbit is only ~9 cm s⁻¹. Detecting that requires
-            σ<sub>RV</sub> &lt; 10 cm s⁻¹, motivating ultra-stabilised spectrographs such as HARPS,
-            ESPRESSO, and EXOhSPEC.
+            gravitationally tugs its host star; an edge-on Earth–Sun analogue produces a stellar
+            semi-amplitude of about 9 cm s⁻¹. Detecting such a signal also requires modelling
+            stellar activity, barycentric motion, tellurics, wavelength calibration, and sampling—not
+            merely resolving a single line displacement.
           </p>
         </div>
         <div class="context-block">
           <h3>Na D lines — why they matter</h3>
           <p>
-            Sodium D lines are strong, narrow, and appear in virtually every late-type stellar spectrum.
-            Their sharpness (small intrinsic width) makes centroid measurement precise. In the solar
-            spectrum they are among the most prominent absorption features, detected in stellar
-            atmospheres, interstellar medium, and exoplanet atmospheres via transmission spectroscopy.
+            The displayed Na&nbsp;I D₂/D₁ air wavelengths, 588.995 and 589.592&nbsp;nm, are an
+            illustrative doublet anchored to the NIST Atomic Spectra Database. Line positions alone
+            are not an RV uncertainty model: precision depends on the full spectrum's gradients,
+            photon counts, line-spread function, wavelength solution, and stellar variability.
           </p>
         </div>
       </div>
@@ -216,9 +218,10 @@
 
   <footer class="site-footer">
     <span class="mono dim">Doppler Shift Visualiser · Astrophysics Interactive · Biswajit Jana · 2026</span>
-    <span class="mono dim">Na D₁ λ₀ = 589.592 nm · c = 299,792.458 km s⁻¹</span>
+    <span class="mono dim">Na D₁ λ₀ = 589.592 nm (air) · c = 299,792.458 km s⁻¹</span>
+    <span class="mono dim">Illustrative spectrum · not an instrument simulator or RV reduction pipeline</span>
   </footer>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js?v=20260926"></script>
 </body>
 </html>

@@ -2,9 +2,12 @@ cff-version: 1.2.0
 title: "Doppler Shift Visualiser"
 message: "If you use this project, please cite it as below."
 type: software
+version: 2.0.0
+date-released: 2026-09-26
 authors:
   - family-names: Jana
     given-names: Biswajit
 year: 2026
 repository-code: "https://github.com/Biswajit1999/doppler-shift-visualiser"
+url: "https://biswajit1999.github.io/doppler-shift-visualiser/web/"
 license: MIT
