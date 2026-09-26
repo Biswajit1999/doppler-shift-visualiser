@@ -1,11 +1,13 @@
 {
   "name": "doppler-shift-visualiser",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "type": "module",
   "private": false,
-  "description": "Research-quality validation wrapper.",
+  "description": "Interactive, tested spectroscopy laboratory for classical and relativistic Doppler shifts.",
   "scripts": {
     "validate:research": "node scripts/validate_repository.mjs",
-    "check": "node scripts/validate_repository.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm run test && node scripts/validate_repository.mjs"
   },
   "author": "Biswajit Jana",
   "license": "MIT"
