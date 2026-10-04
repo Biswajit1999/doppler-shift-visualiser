@@ -21,4 +21,4 @@
 
 - Rebalanced the wavefront and numerical-statistic columns at laptop widths.
 - Added exact redshift and exact-minus-first-order telemetry.
-- Removed public “research upgrade” framing in favour of reader-facing scientific documentation.
+- Removed public self-scoring language in favour of reader-facing scientific documentation.
