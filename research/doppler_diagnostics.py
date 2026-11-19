@@ -14,11 +14,16 @@ def _spectrum(wavelength, flux, sigma):
 def rv_information(wavelength, flux, sigma):
     """Fisher-limited RV sigma for fixed continuum and independent Gaussian flux errors."""
     w, f, s = _spectrum(wavelength, flux, sigma)
-    derivative = np.gradient(f, w, edge_order=2)
+    derivative = _flux_gradient(w, f)
     info = np.sum((w * derivative / (C_M_S * s))**2)
     if not np.isfinite(info) or info <= 0:
         raise ValueError('spectrum contains no RV information')
     return float(1 / np.sqrt(info))
+
+
+def _flux_gradient(wavelength, flux):
+    # Remove the constant continuum term before applying finite differences.
+    return np.gradient(flux - flux[0], wavelength, edge_order=2)
 
 
 def relativistic_velocity_from_wavelength(rest, observed):
@@ -34,7 +39,7 @@ def relativistic_velocity_from_wavelength(rest, observed):
 def rv_information_mask_sensitivity(wavelength, flux, sigma, masks):
     """RV precision for masks; gradients computed on full spectrum before masking."""
     w, f, s = _spectrum(wavelength, flux, sigma)
-    d = np.gradient(f, w, edge_order=2)
+    d = _flux_gradient(w, f)
     contributions = (w*d/(C_M_S*s))**2
     result = []
     for mask in masks:

@@ -22,3 +22,12 @@ class RVInformationTests(unittest.TestCase):
         s = np.ones(101)*.01
         full, half = rv_information_mask_sensitivity(w, f, s, [np.ones(101, bool), np.arange(101)<50])
         self.assertGreaterEqual(half, full)
+
+    def test_flat_spectrum_has_no_information_on_nonuniform_grid(self):
+        w = np.array([500., 500.02, 500.08, 500.4, 501.])
+        f = np.ones(w.size)
+        s = np.full(w.size, 0.01)
+        with self.assertRaisesRegex(ValueError, "no RV information"):
+            rv_information(w, f, s)
+        mask = np.ones(w.size, dtype=bool)
+        self.assertTrue(np.isinf(rv_information_mask_sensitivity(w, f, s, [mask])[0]))
