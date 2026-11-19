@@ -399,3 +399,24 @@ input[type="range"]::-webkit-slider-thumb:hover {
   .context-block:last-child { border-bottom: none; }
   .site-footer { flex-direction: column; align-items: flex-start; }
 }
+.rv-evidence {
+  padding: 1.5rem 0;
+}
+.rv-evidence figure {
+  margin: 1rem 0 0;
+  max-width: 880px;
+}
+.rv-evidence img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.rv-evidence figcaption {
+  margin-top: .65rem;
+  line-height: 1.6;
+}
+.rv-evidence a {
+  color: inherit;
+  text-decoration: underline;
+}
