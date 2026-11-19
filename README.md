@@ -39,6 +39,10 @@ sigma_v = c / (Q sqrt(N_e))
 
 where `Q` summarizes the Doppler information content of the sampled spectrum and `N_e` is the detected photoelectron count. This is a lower bound conditional on the spectrum and detector sampling; stellar activity, calibration, tellurics, and instrumental systematics are additional.
 
+![A simulated absorption line with core and wing masks alongside their conditional radial-velocity precision](web/rv-information.svg)
+
+The figure uses one simulated absorption line with independent 1% flux errors and compares 16 core bins with 16 wing bins. Lower bars indicate greater conditional precision under that model. [Read the wavelength-mask assumptions](docs/RV_INFORMATION_2026_11_19.md) or run `python -m scripts.plot_rv_information` to regenerate the figure.
+
 ## Run locally
 
 Serve the repository so browser modules load correctly:
